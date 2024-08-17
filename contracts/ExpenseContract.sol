@@ -47,7 +47,19 @@ contract ExpenseContract{
     }
 
     function getTotalTrans()public view returns(address[] memory, uint[] memory, string[] memory, uint[] memory){
+        address [] memory users = new address[](transactions.length);
+        uint [] memory amounts = new uint[](transactions.length);
+        string [] memory reasons = new string[](transactions.length);
+        uint [] memory timestamps = new uint[](transactions.length);
 
+        for(i=0;i<transactions.length; i++){
+            users[i] = transactions[i].user;
+            amounts[i] = transactions[i].amount;
+            reasons[i] = transactions[i].reason;
+            timestamps[i] = transactions[i].timestamp;
+        }
+
+        return (users, amounts, reasons, timestamps);
     }
 
     function getTrans(uint _index)public view returns(address, uint, string memory, uint){
@@ -56,5 +68,11 @@ contract ExpenseContract{
         return (transaction.user, transaction.amount, transaction.reason, transaction.timestamp);
     }
 
-    function changeOwner(){}
+    function changeOwner(address _newOwner)public onlyOwner {
+        owner = _newOwner;
+    }
+
+    modifier onlyOwner(){
+        require(msg.sender == owner, "Only Owner can Execute it");
+    }
 }
