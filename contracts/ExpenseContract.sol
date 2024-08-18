@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+pragma solidity ^0.8.0;
+
 contract ExpenseContract{
 
     address public owner;
@@ -15,6 +17,11 @@ contract ExpenseContract{
 
     constructor (){
         owner = msg.sender;
+    }
+
+    modifier onlyOwner(){
+        require(msg.sender == owner, "Only Owner can Execute it");
+        _;
     }
 
     mapping( address => uint) public balances;
@@ -35,7 +42,7 @@ contract ExpenseContract{
         balances[msg.sender] -= _amount;
         transactions.push(Transaction(msg.sender, _amount, _reason, block.timestamp));
         payable(msg.sender).transfer(_amount);
-        emit(msg.sender, _amount, _reason, block.timestamp);
+        emit Withdraw(msg.sender, _amount, _reason, block.timestamp);
     }
 
     function getBalance(address _account)public view returns(uint){
@@ -52,7 +59,7 @@ contract ExpenseContract{
         string [] memory reasons = new string[](transactions.length);
         uint [] memory timestamps = new uint[](transactions.length);
 
-        for(i=0;i<transactions.length; i++){
+        for(uint i=0;i<transactions.length; i++){
             users[i] = transactions[i].user;
             amounts[i] = transactions[i].amount;
             reasons[i] = transactions[i].reason;
@@ -72,7 +79,4 @@ contract ExpenseContract{
         owner = _newOwner;
     }
 
-    modifier onlyOwner(){
-        require(msg.sender == owner, "Only Owner can Execute it");
-    }
 }
