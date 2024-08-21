@@ -10,6 +10,22 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Center(child: Text("Blockchain Wallet", style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold), )),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Text("100 Eth", style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold
+            ),)
+          ],
+        ),
+      ),
+    );
   }
 }
