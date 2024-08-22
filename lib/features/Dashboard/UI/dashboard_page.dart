@@ -1,3 +1,5 @@
+import 'package:blockwall/features/deposit/deposit.dart';
+import 'package:blockwall/features/withdraw/withdraw.dart';
 import 'package:blockwall/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -42,41 +44,93 @@ class _DashboardPageState extends State<DashboardPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  decoration: BoxDecoration(color: AppColors.accent, borderRadius: BorderRadius.circular(17)),
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("Images/deposit.svg", height: 30,width: 30,),
-                      SizedBox(width: 10,),
-                      const Text("Deposit", style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold
-                      ),),
-                    ],
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => Deposit()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(color: AppColors.green, borderRadius: BorderRadius.circular(17)),
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("Images/deposit.svg", height: 30,width: 30,),
+                        SizedBox(width: 10,),
+                        const Text("Deposit", style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      ],
+                    ),
                   ),
                 ),
 
                 SizedBox(width: 30,),
 
-                Container(
-                  decoration: BoxDecoration(color: AppColors.accent, borderRadius: BorderRadius.circular(17)),
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("Images/deposit.svg", height: 30,width: 30,),
-                      SizedBox(width: 10,),
-                      const Text("Withdraw", style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold
-                      ),),
-                    ],
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => Withdraw()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(color: AppColors.red, borderRadius: BorderRadius.circular(17)),
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset("Images/deposit.svg", height: 30,width: 30,),
+                        SizedBox(width: 10,),
+                        const Text("Withdraw", style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold
+                        ),),
+                      ],
+                    ),
                   ),
                 ),
               ],
-            )
+            ),
+
+           SizedBox(height: 30,),
+
+           Text("Transactions", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
+
+            Expanded(
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 6),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset("assets/eth-logo.svg",
+                                  height: 24, width: 24),
+                              const SizedBox(width: 6),
+                              Text("12 ETH",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                          Text("0xF7E789734f5e6d0B1f45e75c8de629A9e4Df7b46",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          Text("PnS me pass krne k liye",
+                            style: TextStyle(fontSize: 16),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+            ),
           ],
         ),
       ),
