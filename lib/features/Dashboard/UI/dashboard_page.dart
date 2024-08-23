@@ -30,6 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
         title: const Center(child: Text("Blockchain Wallet", style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold), )),
       ),
       body: BlocConsumer<DashboardBloc, DashboardState>(
+        bloc: dashboardBloc,
         listener: (context, state){
 
         },
