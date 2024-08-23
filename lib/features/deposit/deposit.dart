@@ -1,8 +1,11 @@
+import 'package:blockwall/features/Dashboard/bloc/dashboard_bloc.dart';
+import 'package:blockwall/model/transaction_model.dart';
 import 'package:blockwall/utils/Colors.dart';
 import 'package:flutter/material.dart';
 
 class Deposit extends StatefulWidget {
-  const Deposit({super.key});
+  final DashboardBloc dashboardBloc;
+  const Deposit({super.key, required this.dashboardBloc});
 
   @override
   State<Deposit> createState() => _DepositState();
@@ -43,7 +46,15 @@ class _DepositState extends State<Deposit> {
             ),
             const SizedBox(height: 20),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                widget.dashboardBloc.add(DashboardDepositEvent(
+                    transactionModel: TransactionModel(
+                        addressController.text,
+                        int.parse(amountController.text),
+                        reasonsController.text,
+                        DateTime.now())));
+                Navigator.pop(context);
+              },
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(

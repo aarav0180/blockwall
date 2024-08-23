@@ -1,8 +1,11 @@
+import 'package:blockwall/features/Dashboard/bloc/dashboard_bloc.dart';
+import 'package:blockwall/model/transaction_model.dart';
 import 'package:blockwall/utils/Colors.dart';
 import 'package:flutter/material.dart';
 
 class Withdraw extends StatefulWidget {
-  const Withdraw({super.key});
+  final DashboardBloc dashboardBloc;
+  const Withdraw({super.key, required this.dashboardBloc});
 
   @override
   State<Withdraw> createState() => _WithdrawState();
@@ -43,7 +46,15 @@ class _WithdrawState extends State<Withdraw> {
             ),
             const SizedBox(height: 20),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                widget.dashboardBloc.add(DashboardWithdrawEvent(
+                    transactionModel: TransactionModel(
+                        addressController.text,
+                        int.parse(amountController.text),
+                        reasonsController.text,
+                        DateTime.now())));
+                Navigator.pop(context);
+              },
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(
@@ -51,7 +62,7 @@ class _WithdrawState extends State<Withdraw> {
                     color: Colors.red),
                 child: const Center(
                   child: Text(
-                    "+ Withdraw",
+                    "- Withdraw",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,

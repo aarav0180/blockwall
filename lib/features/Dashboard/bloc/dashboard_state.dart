@@ -10,10 +10,10 @@ class DashboardLoadingState extends DashboardState {}
 class DashboardErrorState extends DashboardState {}
 
 class DashboardSuccessState extends DashboardState {
-//  final List<TransactionModel> transactions;
-//  final int balance;
-//  DashboardSuccessState({
-//    required this.transactions,
-//    required this.balance,
-//  });
+  final List<TransactionModel> transactions;
+  final int balance;
+  DashboardSuccessState({
+    required this.transactions,
+    required this.balance,
+  });
 }

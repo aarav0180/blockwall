@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
@@ -14,13 +15,16 @@ part 'dashboard_state.dart';
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc() : super(DashboardInitial()) {
     on<DashboardInitialFechEvent>(dashboardInitialFechEvent);
+    on<DashboardDepositEvent>(dashboardDepositEvent);
+    on<DashboardWithdrawEvent>(dashboardWithdrawEvent);
   }
 
     List<TransactionModel> transactions = [];
     Web3Client? _web3Client;
     late ContractAbi _abiCode;
     late EthereumAddress _contractAddress;
-    late EthPrivateKey _creds;
+    late EthPrivateKey _key;
+    int balance=0;
 
     //Functions
     late DeployedContract _deployedContract;
@@ -29,47 +33,102 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     late ContractFunction _getAllTransaction;
     late ContractFunction _getBalance;
 
-//    on<DashboardDepositEvent>(dashboardDepositEvent);
-//    on<DashboardWithdrawEvent>(dashboardWithdrawEvent);
+
 
 
     FutureOr<void> dashboardInitialFechEvent(DashboardInitialFechEvent event,
         Emitter<DashboardState> emit) async {
       emit(DashboardLoadingState());
+      try {
+        String rpcUrl = "http://127.0.0.1:7545";
+        String socketUrl = "ws://127.0.0.1:7545";
+        String privatekey = "0x2160f0d8adbe24f7c3f80f7e0298178cef2b6d91d792757eda91dbf7c43975ad";
 
-      final String rpcUrl = "http://127.0.0.1:7545";
-      final String socketUrl = "ws://127.0.0.1:7545";
+        _web3Client = Web3Client(rpcUrl, http.Client(),
+          socketConnector: () {
+            return IOWebSocketChannel.connect(socketUrl).cast<String>();
+          },
+        );
 
-      final String privatekey = "0x2160f0d8adbe24f7c3f80f7e0298178cef2b6d91d792757eda91dbf7c43975ad";
+        //get ABI (Smart Contract JSON)
 
-      _web3Client = Web3Client(rpcUrl, http.Client(),
-      socketConnector: () {
-        return IOWebSocketChannel.connect(socketUrl).cast<String>();
-      },
-      );
+        String abiFile = await rootBundle
+            .loadString('build/contract/ExpenseContract.json');
 
-      //get ABI (Smart Contract JSON)
+        var jsonDecoded = jsonDecode(abiFile);
 
-      String abiFile = await rootBundle
-          .loadString('build/contract/ExpenseContract.json');
+        _abiCode = ContractAbi.fromJson(
+            jsonEncode(jsonDecoded["abi"]), 'ExpenseManagerContract');
 
-      var jsonDecoded = jsonDecode(abiFile);
+        _contractAddress = EthereumAddress.fromHex(
+            "0x6EfB8862101138e70C8FB0F7981141332a8387c0");
 
-      _abiCode = ContractAbi.fromJson(
-          jsonEncode(jsonDecoded["abi"]), 'ExpenseManagerContract');
+        _key = EthPrivateKey.fromHex(privatekey);
 
-      _contractAddress = EthereumAddress.fromHex(jsonDecoded["networks"]["5777"]["address"]);
+        //get deployed contract
 
-      _creds = EthPrivateKey.fromHex(privatekey);
+        _deployedContract = DeployedContract(_abiCode, _contractAddress);
+        _deposit = _deployedContract.function("deposit");
+        _withdraw = _deployedContract.function("withdraw");
+        _getBalance = _deployedContract.function("getBalance");
+        _getAllTransaction = _deployedContract.function("getTotalTrans");
 
-      //get deployed contract
+        final transactionsData = await _web3Client!.call(
+            contract: _deployedContract,
+            function: _getAllTransaction,
+            params: []);
+        final balanceData = await _web3Client!
+            .call(contract: _deployedContract, function: _getBalance, params: [
+          EthereumAddress.fromHex("0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E")
+        ]);
 
-      _deployedContract = DeployedContract(_abiCode, _contractAddress);
-      _deposit = _deployedContract.function("deposit");
-      _withdraw = _deployedContract.function("withdraw");
-      _getBalance = _deployedContract.function("getBalance");
-      _getAllTransaction = _deployedContract.function("getTotalTrans");
 
+        List<TransactionModel> trans = [];
+        for (int i = 0; i < transactionsData[0].length; i++) {
+          TransactionModel transactionModel = TransactionModel(
+              transactionsData[0][i].toString(),
+              transactionsData[1][i].toInt(),
+              transactionsData[2][i],
+              DateTime.fromMicrosecondsSinceEpoch(
+                  transactionsData[3][i].toInt()));
+          trans.add(transactionModel);
+        }
+        transactions = trans;
 
+        int bal = balanceData[0].toInt();
+        balance = bal;
+
+        emit(DashboardSuccessState(transactions: transactions, balance: balance));
+
+      }catch(e){
+        log(e.toString());
+        emit(DashboardErrorState());
+      }
     }
+
+  FutureOr<void> dashboardDepositEvent(
+      DashboardDepositEvent event, Emitter<DashboardState> emit) async {
+      try{
+        final transaction = Transaction.callContract(
+          from: EthereumAddress.fromHex("0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E"),
+        contract: _deployedContract, function: _deposit,
+        parameters: [BigInt.from(event.transactionModel.amount), event.transactionModel.reason],
+        value: EtherAmount.inWei(BigInt.from(event.transactionModel.amount)));
+
+        final result = await _web3Client!.sendTransaction(_key, transaction,
+            chainId: 1337, fetchChainIdFromNetworkId: false);
+        log(result.toString());
+        add(DashboardInitialFechEvent());
+    }catch(e){
+        log(e.toString());
+      }
+  }
+
+  FutureOr<void> dashboardWithdrawEvent(
+      DashboardWithdrawEvent event, Emitter<DashboardState> emit) async {
+    final data = await _web3Client!.call(
+        contract: _deployedContract, function: _withdraw,
+        params: [BigInt.from(event.transactionModel.amount), event.transactionModel.reason]);
+
+  }
 }
