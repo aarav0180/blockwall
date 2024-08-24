@@ -31,9 +31,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       body: BlocConsumer<DashboardBloc, DashboardState>(
         bloc: dashboardBloc,
-        listener: (context, state){
-
-        },
+        listener: (context, state){},
         builder:(context, state) {
           switch(state.runtimeType){
             case DashboardLoadingState:
@@ -41,7 +39,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: CircularProgressIndicator(),
               );
             case DashboardErrorState:
-              return Text("Error hogaya");
+              return Center(child: Text("Error hogaya"));
             case DashboardSuccessState:
               final successState = state as DashboardSuccessState;
               return Container(
@@ -62,7 +60,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             "Images/ethereum-logo-svg-vector.svg", height: 70,
                             width: 70,),
                           SizedBox(width: 15,),
-                          Text(successState.balance.toString() + " Eth", style: TextStyle(
+                          Text(successState.balance.toString() + ' Eth', style: TextStyle(
                               fontSize: 45,
                               fontWeight: FontWeight.bold
                           ),),
@@ -153,32 +151,32 @@ class _DashboardPageState extends State<DashboardPage> {
                                     SvgPicture.asset("assets/eth-logo.svg",
                                         height: 24, width: 24),
                                     const SizedBox(width: 6),
-                                    Text("12 ETH",
+                                    Text( successState.transactions[index].amount.toString() + ' ETH',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
-                                Text("0xF7E789734f5e6d0B1f45e75c8de629A9e4Df7b46",
+                                Text(successState.transactions[index].address,
                                   style: TextStyle(fontSize: 12),
                                 ),
-                                Text("PnS me pass krne k liye",
+                                Text(successState.transactions[index].reason,
                                   style: TextStyle(fontSize: 16),
                                 )
                               ],
                             ),
                           );
                         },
-                      ),
-                    ),
+                      ))
                   ],
                 ),
               );
 
-            default: return SizedBox();
+            default:
+              return SizedBox();
           }
-        }
+        },
       ),
     );
   }
