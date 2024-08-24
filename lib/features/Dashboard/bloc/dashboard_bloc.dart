@@ -42,7 +42,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       String rpcUrl = "http://127.0.0.1:7545";
       String socketUrl = "ws://127.0.0.1:7545";
       String privateKey =
-          "0x5f806fbab7580a21c08303f45ef2327c53d78d7a89a62a850b52f8ba6d9fa454";
+          "0x2160f0d8adbe24f7c3f80f7e0298178cef2b6d91d792757eda91dbf7c43975ad";
 
       _web3Client = Web3Client(
         rpcUrl,
@@ -61,7 +61,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           jsonEncode(jsonDecoded["abi"]), 'ExpenseManagerContract');
 
       _contractAddress =
-          EthereumAddress.fromHex("0x1C6C5E0Adcd2d0f40E66d6F6Ec4Ff466b7338dA9");
+          EthereumAddress.fromHex("0x02001D914a509eff9E0559fDDdb6754e40B14dcc");
 
       _creds = EthPrivateKey.fromHex(privateKey);
 
@@ -79,7 +79,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           params: []);
       final balanceData = await _web3Client!
           .call(contract: _deployedContract, function: _getBalance, params: [
-        EthereumAddress.fromHex("0xec58056550Dc3A60C96EeB220D0862Bb6b2988cb")
+        EthereumAddress.fromHex("0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E")
       ]);
 
       List<TransactionModel> trans = [];
@@ -109,7 +109,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final transaction = Transaction.callContract(
           from: EthereumAddress.fromHex(
-              "0xec58056550Dc3A60C96EeB220D0862Bb6b2988cb"),
+              "0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E"),
           contract: _deployedContract,
           function: _deposit,
           parameters: [
@@ -132,7 +132,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final transaction = Transaction.callContract(
         from: EthereumAddress.fromHex(
-            "0xec58056550Dc3A60C96EeB220D0862Bb6b2988cb"),
+            "0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E"),
         contract: _deployedContract,
         function: _withdraw,
         parameters: [
