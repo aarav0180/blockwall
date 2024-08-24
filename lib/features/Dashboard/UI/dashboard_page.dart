@@ -63,7 +63,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SvgPicture.asset(
-                              "assets/eth-logo.svg",
+                              "Images.ethereum-logo-svg-vector.svg",
                               height: 50,
                               width: 50,
                             ),
@@ -154,7 +154,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 children: [
                                   Row(
                                     children: [
-                                      SvgPicture.asset("assets/eth-logo.svg",
+                                      SvgPicture.asset("Images.ethereum-logo-svg-vector.svg",
                                           height: 24, width: 24),
                                       const SizedBox(width: 6),
                                       Text(

@@ -39,8 +39,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       DashboardInitialFechEvent event, Emitter<DashboardState> emit) async {
     emit(DashboardLoadingState());
     try {
-      String rpcUrl = "http://127.0.0.1:7545";
-      String socketUrl = "ws://127.0.0.1:7545";
+      String rpcUrl = "http://127.0.0.1:5999";
+      String socketUrl = "ws://127.0.0.1:5999";
       String privateKey =
           "0x2160f0d8adbe24f7c3f80f7e0298178cef2b6d91d792757eda91dbf7c43975ad";
 
@@ -61,7 +61,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           jsonEncode(jsonDecoded["abi"]), 'ExpenseManagerContract');
 
       _contractAddress =
-          EthereumAddress.fromHex("0x02001D914a509eff9E0559fDDdb6754e40B14dcc");
+          EthereumAddress.fromHex("0x627bC6aACA3fA887a4ffa2f8Ef21D00b5568b054");
 
       _creds = EthPrivateKey.fromHex(privateKey);
 
