@@ -1,32 +1,33 @@
+import 'dart:developer';
+
 import 'package:blockwall/features/Dashboard/bloc/dashboard_bloc.dart';
 import 'package:blockwall/model/transaction_model.dart';
 import 'package:blockwall/utils/Colors.dart';
 import 'package:flutter/material.dart';
 
-class Deposit extends StatefulWidget {
+
+class DepositPage extends StatefulWidget {
   final DashboardBloc dashboardBloc;
-  const Deposit({super.key, required this.dashboardBloc});
+  const DepositPage({super.key, required this.dashboardBloc});
 
   @override
-  State<Deposit> createState() => _DepositState();
+  State<DepositPage> createState() => _DepositPageState();
 }
 
-class _DepositState extends State<Deposit> {
-
+class _DepositPageState extends State<DepositPage> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController reasonsController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  AppColors.green,
-      appBar: AppBar(backgroundColor: AppColors.green,),
+      backgroundColor: AppColors.green,
       body: Container(
-        margin: const EdgeInsets.all(20),
+        margin: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 80),
             Text(
               "Deposit Details",
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),

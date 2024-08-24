@@ -4,7 +4,8 @@ import 'package:blockwall/features/withdraw/withdraw.dart';
 import 'package:blockwall/utils/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:flutter_svg/svg.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -21,154 +22,164 @@ class _DashboardPageState extends State<DashboardPage> {
     dashboardBloc.add(DashboardInitialFechEvent());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.back,
-      appBar: AppBar(
-        backgroundColor: AppColors.back,
-        title: const Center(child: Text("Blockchain Wallet", style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold), )),
-      ),
+      backgroundColor: AppColors.accent,
+      appBar:
+      AppBar(title: Text("web3 Bank"), backgroundColor: AppColors.accent),
       body: BlocConsumer<DashboardBloc, DashboardState>(
         bloc: dashboardBloc,
-        listener: (context, state){},
-        builder:(context, state) {
-          switch(state.runtimeType){
+        listener: (context, state) {},
+        builder: (context, state) {
+          switch (state.runtimeType) {
             case DashboardLoadingState:
               return Center(
                 child: CircularProgressIndicator(),
               );
             case DashboardErrorState:
-              return Center(child: Text("Error hogaya"));
+              return Center(
+                child: Text("Error"),
+              );
+
             case DashboardSuccessState:
               final successState = state as DashboardSuccessState;
               return Container(
-
-
-                padding: const EdgeInsets.all(10),
+                margin:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20,),
-                    Container(
-                      decoration: BoxDecoration(color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(17)),
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            "Images/ethereum-logo-svg-vector.svg", height: 70,
-                            width: 70,),
-                          SizedBox(width: 15,),
-                          Text(successState.balance.toString() + ' Eth', style: TextStyle(
-                              fontSize: 45,
-                              fontWeight: FontWeight.bold
-                          ),),
-                        ],
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/eth-logo.svg",
+                              height: 50,
+                              width: 50,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              successState.balance.toString() + ' ETH',
+                              style: TextStyle(
+                                  fontSize: 50, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    SizedBox(height: 30,),
+                    const SizedBox(height: 12),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (
-                                context) => Deposit(dashboardBloc: dashboardBloc,)));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.green, borderRadius: BorderRadius
-                                .circular(17)),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  "Images/deposit.svg", height: 30, width: 30,),
-                                SizedBox(width: 10,),
-                                const Text("Deposit", style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold
-                                ),),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(width: 30,),
-
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (
-                                context) => Withdraw(dashboardBloc: dashboardBloc,)));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.red, borderRadius: BorderRadius
-                                .circular(17)),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  "Images/deposit.svg", height: 30, width: 30,),
-                                SizedBox(width: 10,),
-                                const Text("Withdraw", style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold
-                                ),),
-                              ],
-                            ),
-                          ),
-                        ),
+                        Expanded(
+                            child: InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WithdrawPage(
+                                        dashboardBloc: dashboardBloc,
+                                      ))),
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: AppColors.red),
+                                child: const Center(
+                                  child: Text(
+                                    "- DEBIT",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            )),
+                        const SizedBox(width: 8),
+                        Expanded(
+                            child: InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DepositPage(
+                                        dashboardBloc: dashboardBloc,
+                                      ))),
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: AppColors.green),
+                                child: const Center(
+                                  child: Text(
+                                    "+ CREDIT",
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ))
                       ],
                     ),
-
-                    SizedBox(height: 30,),
-
-                    Text("Transactions",
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),),
-
+                    const SizedBox(height: 20),
+                    Text(
+                      "Transactions",
+                      style:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: successState.transactions.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 6),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 12),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Colors.white),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    SvgPicture.asset("assets/eth-logo.svg",
-                                        height: 24, width: 24),
-                                    const SizedBox(width: 6),
-                                    Text( successState.transactions[index].amount.toString() + ' ETH',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ],
-                                ),
-                                Text(successState.transactions[index].address,
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                Text(successState.transactions[index].reason,
-                                  style: TextStyle(fontSize: 16),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ))
+                        child: ListView.builder(
+                          itemCount: successState.transactions.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 12),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.white),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset("assets/eth-logo.svg",
+                                          height: 24, width: 24),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        successState.transactions[index].amount
+                                            .toString() +
+                                            ' ETH',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                  Text(
+                                    successState.transactions[index].address,
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Text(
+                                    successState.transactions[index].reason,
+                                    style: TextStyle(fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ))
                   ],
                 ),
               );
