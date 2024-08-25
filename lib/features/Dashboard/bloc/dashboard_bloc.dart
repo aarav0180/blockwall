@@ -39,10 +39,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       DashboardInitialFechEvent event, Emitter<DashboardState> emit) async {
     emit(DashboardLoadingState());
     try {
-      String rpcUrl = "http://127.0.0.1:5999";
-      String socketUrl = "ws://127.0.0.1:5999";
+      String rpcUrl = "http://192.168.233.42:7545";
+      String socketUrl = "ws://192.168.233.42:7545";
       String privateKey =
-          "0x2160f0d8adbe24f7c3f80f7e0298178cef2b6d91d792757eda91dbf7c43975ad";
+          "0x404142d6082b60c5c3d8f5e636b464d4160755049d0a36223b08d6dcdc8b243b";
 
       _web3Client = Web3Client(
         rpcUrl,
@@ -58,10 +58,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       var jsonDecoded = jsonDecode(abiFile);
 
       _abiCode = ContractAbi.fromJson(
-          jsonEncode(jsonDecoded["abi"]), 'ExpenseManagerContract');
+          jsonEncode(jsonDecoded['abi']), 'ExpenseManagerContract');
 
       _contractAddress =
-          EthereumAddress.fromHex("0x627bC6aACA3fA887a4ffa2f8Ef21D00b5568b054");
+          EthereumAddress.fromHex("0x9FC87597b8aD320f3F2712Ac3178c64afD072a36");
 
       _creds = EthPrivateKey.fromHex(privateKey);
 
@@ -79,7 +79,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           params: []);
       final balanceData = await _web3Client!
           .call(contract: _deployedContract, function: _getBalance, params: [
-        EthereumAddress.fromHex("0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E")
+        EthereumAddress.fromHex("0x4d4F8393Ba6316275bE27d744295707aD44115f2")
       ]);
 
       List<TransactionModel> trans = [];
@@ -109,7 +109,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final transaction = Transaction.callContract(
           from: EthereumAddress.fromHex(
-              "0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E"),
+              "0x4d4F8393Ba6316275bE27d744295707aD44115f2"),
           contract: _deployedContract,
           function: _deposit,
           parameters: [
@@ -132,7 +132,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final transaction = Transaction.callContract(
         from: EthereumAddress.fromHex(
-            "0xB37933E034abF1f1C30A769B5eFeF6CB031Ec50E"),
+            "0x4d4F8393Ba6316275bE27d744295707aD44115f2"),
         contract: _deployedContract,
         function: _withdraw,
         parameters: [
